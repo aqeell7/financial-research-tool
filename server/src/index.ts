@@ -1,5 +1,6 @@
 import express from "express";
 import type { Application, Request, Response } from "express";
+import documentRoutes from "./routes/document.routes.js"
 import cors from "cors"
 
 const PORT = process.env.PORT || 5002
@@ -11,6 +12,8 @@ app.use(cors())
 app.get('/health', (req:Request, res:Response) => {
   res.json({ status: 'ok' });
 });   
+
+app.use("/api/documents", documentRoutes)
 
 app.listen(PORT,()=>{
   console.log(`the server is running at port ${PORT}`)
