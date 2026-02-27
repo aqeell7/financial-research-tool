@@ -35,7 +35,9 @@ function App() {
     formData.append("document", file); 
 
     try {
-      const response = await fetch("http://localhost:5002/api/documents/upload", {
+      const API_URL = import.meta.env.VITE_API_URL || "https://financial-research-tool-dfhm.onrender.com/api/documents/upload";
+
+    const response = await fetch(API_URL, {
         method: "POST",
         body: formData,
       });
