@@ -1,6 +1,7 @@
 import { Router, type Request, type Response } from "express"
 import multer from "multer";
 import { extractTextFromPDF } from "../services/pdf.service.js";
+import { analyzeEarningsCall } from "../services/ai.service.js";
 
 const router =  Router()
 const storage = multer.memoryStorage();
@@ -27,11 +28,13 @@ router.post("/upload", upload.single("document"), async (req: Request, res: Resp
       });
     }
 
+    const analysisData = await analyzeEarningsCall(extractedText);
+
     res.json({
-      message: "File uploaded and parsed successfully",
+      message: "File uploaded, parsed, and analyzed successfully",
       fileName: req.file.originalname,
       size: req.file.size,
-      textSnippet: extractedText.substring(0, 500) + "..."
+      analysisData: analysisData 
     });
   } catch (error) {
     console.error("Route error:", error);
