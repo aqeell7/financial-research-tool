@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Upload, FileText, Loader2, AlertCircle } from 'lucide-react';
+import { Upload, Loader2, AlertCircle } from 'lucide-react';
 
 interface AnalysisData {
   tone: string;
