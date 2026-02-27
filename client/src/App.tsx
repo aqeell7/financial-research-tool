@@ -95,10 +95,81 @@ function App() {
         )}
 
         {analysis && (
-          <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center text-gray-500">
-            <FileText className="mx-auto mb-3 text-green-500" size={48} />
-            <h2 className="text-xl font-semibold text-gray-800">Analysis Complete</h2>
-            <p>Data received successfully. Ready to build the dashboard view!</p>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden text-left">
+            {/* Header Section */}
+            <div className="bg-gray-50 p-6 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">Earnings Call Summary</h2>
+                <p className="text-sm text-gray-500 mt-1">Extracted via AI Analysis</p>
+              </div>
+              <div className="flex gap-3">
+                <span className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize border ${
+                  analysis.tone.toLowerCase().includes('optimistic') ? 'bg-green-100 text-green-800 border-green-200' :
+                  analysis.tone.toLowerCase().includes('cautious') ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
+                  analysis.tone.toLowerCase().includes('pessimistic') ? 'bg-red-100 text-red-800 border-red-200' :
+                  'bg-gray-100 text-gray-800 border-gray-200'
+                }`}>
+                  Tone: {analysis.tone}
+                </span>
+                <span className="px-4 py-1.5 rounded-full text-sm font-semibold capitalize border bg-blue-50 text-blue-800 border-blue-200">
+                  Confidence: {analysis.confidence_level}
+                </span>
+              </div>
+            </div>
+
+            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+              
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-lg font-semibold  mb-3 flex items-center text-green-700">
+                    <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                    Key Positives
+                  </h3>
+                  <ul className="space-y-2">
+                    {analysis.key_positives.map((item, idx) => (
+                      <li key={idx} className="text-gray-700 text-sm pl-4 border-l-2 border-green-200">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold  mb-3 flex items-center text-red-700">
+                    <span className="w-2 h-2 rounded-full bg-red-500 mr-2"></span>
+                    Key Concerns
+                  </h3>
+                  <ul className="space-y-2">
+                    {analysis.key_concerns.map((item, idx) => (
+                      <li key={idx} className="text-gray-700 text-sm pl-4 border-l-2 border-red-200">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="space-y-8">
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                  <h3 className="text-sm font-bold text-blue-900 uppercase tracking-wider mb-2">Forward Guidance</h3>
+                  <p className="text-gray-800 text-sm leading-relaxed">{analysis.forward_guidance}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold  mb-3 flex items-center text-purple-700">
+                    <span className="w-2 h-2 rounded-full bg-purple-500 mr-2"></span>
+                    Growth Initiatives
+                  </h3>
+                  <ul className="space-y-2">
+                    {analysis.growth_initiatives.map((item, idx) => (
+                      <li key={idx} className="text-gray-700 text-sm pl-4 border-l-2 border-purple-200">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-1">Capacity Utilization</h3>
+                  <p className="text-gray-800 text-sm">{analysis.capacity_utilization}</p>
+                </div>
+              </div>
+
+            </div>
           </div>
         )}
 
