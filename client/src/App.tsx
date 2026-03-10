@@ -56,122 +56,145 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen p-8 flex flex-col items-center font-sans tracking-tight">
-      <div className="w-full max-w-4xl space-y-8 mt-8">
+    <div className="min-h-screen p-8 flex flex-col items-center relative z-10">
+      {/* Mesh Gradient Background */}
+      <div className="mesh-gradient" />
+
+      <div className="w-full max-w-4xl space-y-10 mt-12 mb-20 relative">
         
         {/* Header - More authoritative */}
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-semibold text-neutral-900 tracking-tight">Earnings Intelligence</h1>
-          <p className="text-neutral-500 text-sm">Upload a transcript PDF for structured semantic extraction.</p>
+        <div className="text-center space-y-3">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">Earnings Intelligence</h1>
+          <p className="text-slate-500 text-base md:text-lg font-medium max-w-xl mx-auto">Upload a transcript PDF for structured semantic extraction.</p>
         </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-sm border border-neutral-200 flex flex-col items-center space-y-5">
-          <div className="p-4 bg-neutral-100 text-neutral-600 rounded-md border border-neutral-200">
-            <Upload size={28} strokeWidth={1.5} />
+        {/* Upload Card */}
+        <div className="glass-card p-10 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.04)] flex flex-col items-center space-y-6 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] relative overflow-hidden">
+          <div className="absolute inset-0 bg-white/40 pointer-events-none rounded-3xl"></div>
+          <div className="relative z-10 w-full flex flex-col items-center space-y-6">
+            <div className="p-5 bg-indigo-50/50 text-indigo-600 rounded-2xl border border-indigo-100/50 shadow-sm">
+              <Upload size={32} strokeWidth={1.5} />
+            </div>
+            
+            <div className="w-full max-w-md">
+              <input 
+                type="file" 
+                accept="application/pdf" 
+                onChange={handleFileChange}
+                className="block w-full text-sm text-slate-500 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-slate-100 file:text-slate-800 hover:file:bg-slate-200 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-xl bg-white/50 border border-slate-200/50 shadow-sm"
+              />
+            </div>
+            
+            <button 
+              onClick={handleUpload} 
+              disabled={!file || isLoading}
+              className="w-full max-w-md bg-slate-900 text-white py-3.5 rounded-xl text-base font-medium hover:bg-slate-800 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none flex justify-center items-center shadow-md border border-slate-800"
+            >
+              {isLoading ? (
+                <><Loader2 className="animate-spin mr-2" size={18} /> Processing Document...</>
+              ) : (
+                'Run Extraction Pipeline'
+              )}
+            </button>
           </div>
-          <input 
-            type="file" 
-            accept="application/pdf" 
-            onChange={handleFileChange}
-            className="block w-full text-sm text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-neutral-100 file:text-neutral-800 hover:file:bg-neutral-200 cursor-pointer transition-colors"
-          />
-          
-          <button 
-            onClick={handleUpload} 
-            disabled={!file || isLoading}
-            className="w-full bg-neutral-900 text-white py-2.5 rounded-md text-sm font-medium hover:bg-neutral-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center shadow-sm"
-          >
-            {isLoading ? (
-              <><Loader2 className="animate-spin mr-2" size={16} /> Processing Document...</>
-            ) : (
-              'Run Extraction Pipeline'
-            )}
-          </button>
         </div>
 
         {error && (
-          <div className="bg-red-50 text-red-800 p-4 rounded-md flex items-start border border-red-100 text-sm">
-            <AlertCircle className="mr-3 shrink-0 mt-0.5" size={16} />
-            <p>{error}</p>
+          <div className="bg-red-50/90 backdrop-blur-sm text-red-800 p-5 rounded-2xl flex items-start border border-red-100/50 shadow-sm text-sm font-medium">
+            <AlertCircle className="mr-3 shrink-0 mt-0.5" size={18} />
+            <p className="leading-relaxed">{error}</p>
           </div>
         )}
 
         {analysis && (
-          <div className="bg-white rounded-lg shadow-sm border border-neutral-200 overflow-hidden text-left">
-            {/* Header Section */}
-            <div className="bg-neutral-50/50 p-6 border-b border-neutral-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
-                <h2 className="text-lg font-semibold text-neutral-900">Transcript Analysis</h2>
-                <p className="text-xs text-neutral-500 mt-1 uppercase tracking-wider font-medium">AI Extraction Complete</p>
-              </div>
-              <div className="flex gap-2">
-                <span className={`px-3 py-1 rounded-md text-xs font-medium capitalize border ${
-                  analysis.tone.toLowerCase().includes('optimistic') ? 'bg-emerald-50 text-emerald-800 border-emerald-200' :
-                  analysis.tone.toLowerCase().includes('cautious') ? 'bg-amber-50 text-amber-800 border-amber-200' :
-                  analysis.tone.toLowerCase().includes('pessimistic') ? 'bg-rose-50 text-rose-800 border-rose-200' :
-                  'bg-neutral-100 text-neutral-800 border-neutral-200'
-                }`}>
-                  Tone: {analysis.tone}
-                </span>
-                <span className="px-3 py-1 rounded-md text-xs font-medium capitalize border bg-neutral-100 text-neutral-700 border-neutral-200">
-                  Confidence: {analysis.confidence_level}
-                </span>
-              </div>
-            </div>
-
-            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
-              
-              <div className="space-y-8">
+          <div className="glass-card rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.04)] overflow-hidden text-left relative transition-all duration-500 animate-in fade-in slide-in-from-bottom-4">
+            <div className="absolute inset-0 bg-white/60 pointer-events-none z-0"></div>
+            
+            <div className="relative z-10">
+              {/* Header Section */}
+              <div className="bg-white/40 p-8 border-b border-slate-200/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
                 <div>
-                  <h3 className="text-sm font-semibold text-neutral-900 mb-3 flex items-center">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2"></span>
-                    Key Positives
-                  </h3>
-                  <ul className="space-y-2.5">
-                    {analysis.key_positives.map((item, idx) => (
-                      <li key={idx} className="text-neutral-600 text-sm leading-relaxed pl-4 border-l border-neutral-200">{item}</li>
-                    ))}
-                  </ul>
+                  <h2 className="text-xl font-bold text-slate-900 tracking-tight">Transcript Analysis</h2>
+                  <p className="text-xs text-slate-500 mt-1.5 uppercase tracking-widest font-semibold flex items-center">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
+                    AI Extraction Complete
+                  </p>
                 </div>
-
-                <div>
-                  <h3 className="text-sm font-semibold text-neutral-900 mb-3 flex items-center">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 mr-2"></span>
-                    Key Concerns
-                  </h3>
-                  <ul className="space-y-2.5">
-                    {analysis.key_concerns.map((item, idx) => (
-                      <li key={idx} className="text-neutral-600 text-sm leading-relaxed pl-4 border-l border-neutral-200">{item}</li>
-                    ))}
-                  </ul>
+                <div className="flex gap-3">
+                  <span className={`px-4 py-1.5 rounded-full text-xs font-semibold capitalize border shadow-sm ${
+                    analysis.tone.toLowerCase().includes('optimistic') ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                    analysis.tone.toLowerCase().includes('cautious') ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                    analysis.tone.toLowerCase().includes('pessimistic') ? 'bg-rose-50 text-rose-700 border-rose-200' :
+                    'bg-slate-50 text-slate-700 border-slate-200'
+                  }`}>
+                    Tone: {analysis.tone}
+                  </span>
+                  <span className="px-4 py-1.5 rounded-full text-xs font-semibold capitalize border bg-white text-slate-700 border-slate-200 shadow-sm">
+                    Confidence: {analysis.confidence_level}
+                  </span>
                 </div>
               </div>
 
-              <div className="space-y-8">
-                {/* Replaced blue box with a sleek neutral gray box */}
-                <div className="bg-neutral-50 p-5 rounded-md border border-neutral-200">
-                  <h3 className="text-xs font-semibold text-neutral-500 uppercase tracking-widest mb-3">Forward Guidance</h3>
-                  <p className="text-neutral-800 text-sm leading-relaxed font-medium">{analysis.forward_guidance}</p>
+              <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                
+                <div className="space-y-10">
+                  <div className="bg-white/50 p-6 rounded-2xl border border-slate-100 shadow-sm">
+                    <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center">
+                      <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center mr-3">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      </div>
+                      Key Positives
+                    </h3>
+                    <ul className="space-y-3">
+                      {analysis.key_positives.map((item, idx) => (
+                        <li key={idx} className="text-slate-600 text-sm leading-relaxed pl-4 border-l-2 border-emerald-100">{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-white/50 p-6 rounded-2xl border border-slate-100 shadow-sm">
+                    <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center">
+                      <div className="w-6 h-6 rounded-full bg-rose-100 flex items-center justify-center mr-3">
+                        <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                      </div>
+                      Key Concerns
+                    </h3>
+                    <ul className="space-y-3">
+                      {analysis.key_concerns.map((item, idx) => (
+                        <li key={idx} className="text-slate-600 text-sm leading-relaxed pl-4 border-l-2 border-rose-100">{item}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
 
-                <div>
-                  <h3 className="text-sm font-semibold text-neutral-900 mb-3 flex items-center">
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2"></span>
-                    Growth Initiatives
-                  </h3>
-                  <ul className="space-y-2.5">
-                    {analysis.growth_initiatives.map((item, idx) => (
-                      <li key={idx} className="text-neutral-600 text-sm leading-relaxed pl-4 border-l border-neutral-200">{item}</li>
-                    ))}
-                  </ul>
+                <div className="space-y-10">
+                  <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-md relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl -mr-16 -mt-16 transition-opacity group-hover:opacity-100 opacity-50"></div>
+                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Forward Guidance</h3>
+                    <p className="text-white text-sm leading-relaxed font-medium relative z-10">{analysis.forward_guidance}</p>
+                  </div>
+
+                  <div className="bg-white/50 p-6 rounded-2xl border border-slate-100 shadow-sm">
+                    <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center">
+                      <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                        <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                      </div>
+                      Growth Initiatives
+                    </h3>
+                    <ul className="space-y-3">
+                      {analysis.growth_initiatives.map((item, idx) => (
+                        <li key={idx} className="text-slate-600 text-sm leading-relaxed pl-4 border-l-2 border-indigo-100">{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-white/50 p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-slate-700">Capacity Utilization</h3>
+                    <p className="text-slate-900 text-sm font-semibold bg-slate-100 px-3 py-1 rounded-lg">{analysis.capacity_utilization}</p>
+                  </div>
                 </div>
 
-                <div>
-                  <h3 className="text-xs font-semibold text-neutral-500 uppercase tracking-widest mb-2">Capacity Utilization</h3>
-                  <p className="text-neutral-800 text-sm">{analysis.capacity_utilization}</p>
-                </div>
               </div>
-
             </div>
           </div>
         )}
